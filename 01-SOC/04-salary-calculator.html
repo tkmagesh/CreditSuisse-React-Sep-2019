@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Salary Calculator</title>
+	<style>
+		body{
+			margin-left: 50px;
+		}
+		.field{
+			margin-bottom: 10px;
+		}
+		label{
+			display: block;
+		}
+		#divSalary{
+			font-size: 18pt;
+		}
+	</style>
+	<script src="jquery-3.4.1.js"></script>
+	<script>
+		String.prototype.toInt = function() {
+			return parseInt(this, 10);
+		};
+
+		//Model
+		//state & behavior
+		function SalaryCalculatorModel(){
+			//state
+			this.basic = 0;
+			this.hra = 0;
+			this.da = 0;
+			this.tax = 0;
+			this.salary = 0;
+
+			this.onSalaryChange = null;
+		}
+		//behavior
+		SalaryCalculatorModel.prototype.calculate = function() {
+			var gross = this.basic + this.hra + this.da;
+			var net = gross * ((100-this.tax)/100);
+			this.salary = net;
+			if (typeof this.onSalaryChange === 'function')
+				this.onSalaryChange();
+		};
+
+		//UI
+		//View
+		$(function(){
+			
+			window['model'] = new SalaryCalculatorModel();
+
+			$('#txtBasic').change(function(){
+				model.basic = $(this).val().toInt();
+			});
+
+			$('#txtHra').change(function(){
+				model.hra = $(this).val().toInt();
+			});
+
+			$('#txtDa').change(function(){
+				model.da = $(this).val().toInt();
+			});
+
+			$('#rangeTax').change(function(){
+				model.tax = $(this).val().toInt();
+			});
+
+			$('#btnCalculate').click(function(){
+				model.calculate();	
+			});
+
+			model.onSalaryChange = function(){
+				$('#divSalary').html(model.salary);
+			};
+		});
+	</script>
+</head>
+<body>
+	<h1>Salary Calculator</h1>
+	<hr>
+	<section>
+		<div class="field">
+			<label for="">Basic :</label>
+			<input type="number" name="" id="txtBasic">
+		</div>
+		<div class="field">
+			<label for="">HRA :</label>
+			<input type="number" name="" id="txtHra">
+		</div>
+		<div class="field">
+			<label for="">DA :</label>
+			<input type="number" name="" id="txtDa">
+		</div>
+		<div class="field">
+			<label for="">Tax :</label>
+			<input type="range" name="" id="rangeTax" min="0" max="30" value="0">
+		</div>
+		<div class="field">
+			<input type="button" value="Calculate" id="btnCalculate">
+		</div>
+		<div class="field">
+			<div id="divSalary">[Salary]</div>
+		</div>
+	</section>
+</body>
+</html>
