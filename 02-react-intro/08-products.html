@@ -9,10 +9,14 @@
 	<script type="text/babel">
 		class Products extends React.Component{
 			render(){
-				let productNames = [ 'Pen', 'Pencil' ];
+				let productNames = [  ];
 				let productItems = productNames.map( (productName, index) => (<li key={index}>{productName}</li>));
 				return(
+
 					<section>
+						<label>Product Name :</label>
+						<input type="text" />
+						<input type="button" value="Add New" />
 						<ol>
 							{productItems}
 						</ol>
