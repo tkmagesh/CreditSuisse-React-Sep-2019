@@ -7,16 +7,56 @@
 	<script src="react-dom.development.js"></script>
 	<script src="babel.min.js"></script>
 	<script type="text/babel">
-		class Products extends React.Component{
+
+		class Observable{
+			_subscriptions = [];
+
+			subscribe = (listenerFn) => {
+				this._subscriptions.push(listenerFn);
+			}
+			triggerChange = () => {
+				this._subscriptions.forEach(listenerFn => listenerFn());
+			}
+		}
+
+		class ProductsCollection extends Observable{
+			_list = [];
+
+			getAll =() => {
+				return [...this._list];
+			}
+
+			addNew =(productName) => {
+				this._list.push(productName);
+				this.triggerChange();
+			}
+		}
+
+		{/*class ProductsCount extends React.Component{
 			render(){
-				let productNames = [  ];
+				return(<h3> Products Count { this.props.data}</h3>)
+			}
+		}*/}
+
+		let ProductsCount = (props) => {
+			return(<h3> Products Count { props.data}</h3>)
+		}
+
+		class Products extends React.Component{
+			state = { newProductName : '' };
+			onAddNewClick = () => {
+				this.props.model.addNew(this.state.newProductName);
+			}
+			render(){
+				let { model } = this.props;
+				let productNames = model.getAll();
 				let productItems = productNames.map( (productName, index) => (<li key={index}>{productName}</li>));
 				return(
 
 					<section>
 						<label>Product Name :</label>
-						<input type="text" />
-						<input type="button" value="Add New" />
+						<input type="text" onChange={ evt => this.setState({ newProductName : evt.target.value}) }/>
+						<input type="button" value="Add New" onClick={this.onAddNewClick}/>
 						<ol>
 							{productItems}
 						</ol>
@@ -25,8 +65,18 @@
 			}
 		}
 
-		ReactDOM.render(<Products/>,
-			document.getElementById('root'));
+		let productsCollection = new ProductsCollection();
+
+		function renderApp(){
+			ReactDOM.render(
+				<div>
+					<ProductsCount data={productsCollection.getAll().length} />
+					<Products model={productsCollection}/>
+				</div>,
+				document.getElementById('root'));
+		}
+		renderApp();
+		productsCollection.subscribe(renderApp);
 
 	</script>
 </head>

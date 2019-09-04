@@ -97,7 +97,7 @@
 			}
 		}
 
-		class SalaryCalculatorInput extends React.Component{
+		{/*class SalaryCalculatorInput extends React.Component{
 
 			render(){
 				let { labelText, onValueChange, type="number", ...attrs } = this.props;
@@ -108,7 +108,15 @@
 					</div>
 				);
 			}
-		}
+		}*/}
+
+		let SalaryCalculatorInput = ({ labelText, onValueChange, type="number", ...attrs }) => (
+			<div className="field">
+				<label htmlFor="">{labelText}</label>
+				<input type={type} onChange={evt => onValueChange(evt.target.value.toInt())} {...attrs} />
+			</div>
+		);
+		
 
 		class SalaryCalculatorResult extends React.Component{
 			
