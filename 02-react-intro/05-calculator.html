@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Calculator</title>
+	<style>
+		.positive{
+			color : green
+		}
+		.negative{
+			color : red
+		}
+	</style>
+	<script src="react.development.js"></script>
+	<script src="react-dom.development.js"></script>
+	<script src="babel.min.js"></script>
+	<script type="text/babel">
+		class Calculator extends React.Component{
+			state = {
+				n1 : 0,
+				n2 : 0,
+				result : 0
+			}
+			onN1Change = (evt) => {
+				this.setState({ n1 : parseInt(evt.target.value)});
+			}
+			onN2Change = (evt) => {
+				this.setState({ n2 : parseInt(evt.target.value)});
+			}
+			onAddClick = () => {
+				let { n1, n2 } = this.state;
+				let result = n1 + n2;
+				this.setState({ result : result});
+			}
+			onSubtractClick = () => {
+				let { n1, n2 } = this.state;
+				let result = n1 - n2;
+				this.setState({ result : result});
+			}
+			onMultiplyClick = () => {
+				let { n1, n2 } = this.state;
+				let result = n1 * n2;
+				this.setState({ result : result});
+			}
+			onDivideClick = () => {
+				let { n1, n2 } = this.state;
+				let result = n1 / n2;
+				this.setState({ result : result});
+			}
+			render(){
+				let { n1, n2, result } = this.state;
+				return(
+					<div>
+						<h1>Calculator</h1>
+						<hr/>
+						<input type="number" onChange={this.onN1Change}/>
+						<input type="number" onChange={this.onN2Change}/>
+						<br/>
+						<input type="button" value="Add" onClick={this.onAddClick} />
+						<input type="button" value="Subtract" onClick={this.onSubtractClick} />
+						<input type="button" value="Multiply" onClick={this.onMultiplyClick} />
+						<input type="button" value="Divide" onClick={this.onDivideClick} />
+						{ result >= 0 ? (<div className="positive">{result}</div> ) : ( <div className="negative">{result}</div> ) }
+					</div>
+				)
+			}
+		}
+		
+		ReactDOM.render(<Calculator/>,
+			document.getElementById('root'));
+	</script>
+</head>
+<body>
+	<div id="root"></div>
+</body>
+</html>
