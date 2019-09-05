@@ -9,7 +9,11 @@ import BugTracker from './bugTracker';
 import appStore from './store';
 
 import * as serviceWorker from './serviceWorker';
-	
+
+import axios from 'axios';
+
+window['axios'] = axios;
+
 ReactDOM.render(
 	<Provider store={appStore}>
 		<div>

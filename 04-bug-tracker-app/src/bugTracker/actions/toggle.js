@@ -1,5 +1,8 @@
+import bugApi from '../services/bugApi';
+
 export function toggle(bugToToggle){
-	let toggledBug = { ...bugToToggle, isClosed : !bugToToggle.isClosed};
-	let action = { type : 'REPLACE', payload : toggledBug };
-	return action;
+	let toggledBugData = { ...bugToToggle, isClosed : !bugToToggle.isClosed};
+	return bugApi
+		.save(toggledBugData)
+		.then(toggledBug => ({ type : 'REPLACE', payload : toggledBug }))
 }

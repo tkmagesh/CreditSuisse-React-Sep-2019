@@ -1,6 +1,8 @@
-let currentBugId = 0;
+import bugApi from '../services/bugApi';
+
 export function addNew(newBugName){
-	let newBug = { id : ++currentBugId, name : newBugName, isClosed : false, createdAt : new Date() };
-	let action = { type : 'ADD_NEW', payload : newBug};
-	return action;
+	let newBugData = { id : 0, name : newBugName, isClosed : false, createdAt : new Date() };
+	return bugApi
+		.save(newBugData)
+		.then(newBug => ({ type : 'ADD_NEW', payload : newBug}))
 }
