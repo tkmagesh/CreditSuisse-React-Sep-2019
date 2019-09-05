@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Bug Tracker</title>
+	<style>
+		body{
+			margin-left: 50px;
+		}
+		section{
+			margin-bottom: 10px;
+		}
+		.stats,.bugname{
+			font-size: 18pt;
+		}
+		.closed{
+			color : red;
+			text-decoration: line-through;
+			font-style: italic;
+			font-weight: bold;
+		}
+		.bugname{
+			cursor: pointer;
+		}
+		ol{
+			width: 500px;
+			list-style : none;
+			-webkit-padding-start : 0px;
+		}
+		li{
+			margin-bottom: 10px;
+			padding: 10px;
+			border-radius: 5px;
+			background-color: #e7e7e7;
+			border : 2px solid gray;
+		}
+	</style>
+	<script src="react.development.js"></script>
+	<script src="react-dom.development.js"></script>
+	<script src="babel.min.js"></script>
+	<script src="state-manager.js"></script>
+	<script type="text/babel">
+
+		let currentBugId = 0;
+
+		let bugActionCreators = {
+			addNew(newBugName){
+				let newBug = { id : ++currentBugId, name : newBugName, isClosed : false, createdAt : new Date() };
+				let action = { type : 'ADD_NEW', payload : newBug};
+				return action;
+			},
+			toggle(bugToToggle){
+				let toggledBug = { ...bugToToggle, isClosed : !bugToToggle.isClosed};
+				let action = { type : 'REPLACE', payload : toggledBug };
+				return action;
+			},
+			removeClosed(currentBugs){
+				let closedBugs = currentBugs.filter(bug => bug.isClosed);
+				let action = { type : 'REMOVE_ALL', payload : closedBugs};
+				return action;
+			}
+		}
+
+		function bugsReducer(currentState = [], action){
+			if (action.type === 'ADD_NEW'){
+				let newState = [...currentState, action.payload];
+				return newState;
+			}
+			if (action.type === 'REPLACE'){
+				let bugToReplace = action.payload,
+					newState = currentState.map(bug => bug.id === bugToReplace.id ? bugToReplace : bug);
+				return newState;
+			}
+			if (action.type === 'REMOVE_ALL'){
+				let bugsToRemove = action.payload,
+					newState = currentState.filter(bug => !bugsToRemove.find(b => b.id === bug.id));
+				return newState;
+			}
+			return currentState;
+		}
+
+		let store = SM.createStore(bugsReducer);
+
+		let bugActionDispatchers = SM.bindActionCreators(bugActionCreators, store.dispatch);
+
+		class BugTracker extends React.Component{
+			state = {
+				newBugName : ''
+			}
+			render(){
+				let { bugs, addNew, toggle, removeClosed } = this.props,
+					bugItems = bugs.map((bug, index) => (
+						<li key={index}>
+							{
+								bug.isClosed ? 
+								(<span className="bugname closed" onClick={() => toggle(bug)}>{bug.name}</span>)
+								: (<span className="bugname" onClick={() => toggle(bug)}>{bug.name}</span>)
+							}
+							<div className="datetime">{bug.createdAt.toString()}</div>
+						</li>
+					)),
+					closedCount = bugs.reduce((result, bug) => bug.isClosed ? ++result : result, 0);
+				return(
+					<section>
+						<section className="stats">
+							<span className="closed">{closedCount}</span>
+							<span> / </span>
+							<span>{bugs.length}</span>
+						</section>
+						<section className="sort">
+							<label htmlFor="">Order By :</label>
+							<select name="" id="">
+								<option value=""></option>
+								<option value=""></option>
+							</select>
+							<label htmlFor="">Descending ? :</label>
+							<input type="checkbox" name="" id="" />
+						</section>
+						<section className="edit">
+							<label htmlFor="">Bug Name :</label>
+							<input type="text" onChange={ evt => this.setState({newBugName : evt.target.value})} />
+							<input type="button" value="Add New" onClick={ () => addNew(this.state.newBugName) }/>
+						</section>
+						<section className="list">
+							<ol>
+								{bugItems}
+							</ol>
+							<input type="button" value="Remove Closed" onClick={() => removeClosed(bugs)}/>
+						</section>
+					</section>
+				)
+			}
+		}
+
+		function renderApp(){
+
+			let bugs = store.getState();
+			ReactDOM.render(<BugTracker bugs={bugs} {...bugActionDispatchers}/>,
+				document.getElementById('root'));
+		}
+		renderApp();
+		store.subscribe(renderApp);
+	</script>
+</head>
+<body>
+	<h1>Bug Tracker</h1>
+	<hr>
+	<div id="root"></div>
+</body>
+</html>
