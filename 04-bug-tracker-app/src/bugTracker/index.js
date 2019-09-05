@@ -10,11 +10,13 @@ import BugList from './views/bugList';
 import * as bugActionCreators from './actions';
 
 class BugTracker extends Component{
+	componentDidMount(){
+		this.props.load();
+	}
 	render(){
-		let { bugs, addNew, removeClosed, toggle, load } = this.props;
+		let { bugs, addNew, removeClosed, toggle } = this.props;
 		return(
 			<section>
-				<input type="button" value="Load" onClick={load}/>
 				<BugStats bugs={bugs} />
 				<BugSort />
 				<BugEdit addNew={addNew} />
@@ -25,7 +27,7 @@ class BugTracker extends Component{
 }
 
 function mapStateToProps(storeState){
-	let bugs = storeState.bugsData;
+	let bugs = storeState.bugsData.filter(bug => bug.id % 2 === storeState.spinnerData % 2);
 	return { bugs : bugs };
 }
 

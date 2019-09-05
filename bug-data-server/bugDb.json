@@ -1,5 +1,42 @@
 {
-  "bugs": [],
+  "bugs": [
+    {
+      "id": 1,
+      "name": "Bug - 1",
+      "isClosed": false,
+      "createdAt": "2019-09-05T11:22:30.818Z"
+    },
+    {
+      "id": 2,
+      "name": "Bug - 2",
+      "isClosed": false,
+      "createdAt": "2019-09-05T11:22:41.234Z"
+    },
+    {
+      "id": 3,
+      "name": "Bug - 3",
+      "isClosed": false,
+      "createdAt": "2019-09-05T11:22:42.781Z"
+    },
+    {
+      "id": 4,
+      "name": "4",
+      "isClosed": false,
+      "createdAt": "2019-09-05T11:22:44.434Z"
+    },
+    {
+      "id": 5,
+      "name": "Bug - 5",
+      "isClosed": false,
+      "createdAt": "2019-09-05T11:22:48.765Z"
+    },
+    {
+      "id": 6,
+      "name": "Bug - 6",
+      "isClosed": false,
+      "createdAt": "2019-09-05T11:22:50.881Z"
+    }
+  ],
   "projects": [
     {
       "id": 1,

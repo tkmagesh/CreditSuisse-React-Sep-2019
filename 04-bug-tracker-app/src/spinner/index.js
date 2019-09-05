@@ -33,6 +33,7 @@ export let spinnerActionCreators = {
 }
 export let Spinner = ({ spinnerValue : value, up, down, doubleUp, doubleDown}) => (
 	<div>
+		<span>asdfdsafas</span>
 		<input type="button" value="Double Decrement" onClick={doubleDown}/>
 		<input type="button" value="Decrement" onClick={down}/>
 		<span> [ {value} ] </span>
